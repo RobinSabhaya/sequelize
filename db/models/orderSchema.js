@@ -11,7 +11,7 @@ const order = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
-    date: {
+    order_date: {
       type: DataTypes.STRING,
       defaultValue: new Date().getDate(),
       allowNull: false,

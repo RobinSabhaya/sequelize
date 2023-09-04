@@ -1,7 +1,5 @@
 const express = require("express");
-
-const route = express.Router();
-
+const auth = require("../middlewares/auth");
 const {
   getOne,
   postProduct,
@@ -9,10 +7,12 @@ const {
   deleteProduct,
   allProduct,
 } = require("../controllers/productController");
+const route = express.Router();
 
+// route.use(auth);
 route.get("/:id", getOne);
 route.post("/", postProduct);
-route.patch("/:id", updateProduct);
+route.put("/:id", updateProduct);
 route.delete("/:id", deleteProduct);
 route.get("/", allProduct);
 

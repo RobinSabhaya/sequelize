@@ -3,7 +3,7 @@ const productController = {
   async postProduct(req, res) {
     // const {name,price} = req.body;
     try {
-      const productData = await product.bulkCreate(req.body);
+      const productData = await product.create(req.body);
       return res.status(201).json({
         status: 200,
         message: "Product created successfully",
@@ -34,7 +34,7 @@ const productController = {
         { name: name, price: price },
         {
           where: {
-            productid: id,
+            id: id,
           },
         }
       );
@@ -55,7 +55,7 @@ const productController = {
       const { id } = req.params;
       const productData = await product.destroy({
         where: {
-          productid: id,
+          id: id,
         },
       });
       return res.status(200).json({
@@ -81,7 +81,7 @@ const productController = {
     const { id } = req.params;
     const productData = await product.findOne({
       where: {
-        productid: id,
+        id: id,
       },
     });
     return res.status(200).json({

@@ -6,7 +6,7 @@ const allController = {
   async all(req, res) {
     try {
       const orderData = await order.findAll({
-        attributes: ["id", "date", "totalAmount"],
+        attributes: ["id", "order_date", "totalAmount"],
         include: [
           {
             model: customer,
