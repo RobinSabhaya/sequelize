@@ -1,37 +1,34 @@
-const {Sequelize,DataTypes} = require('sequelize')
-const sequelize = require('../conn');
-const customer = require('../models/customerSchema')
-const orderItem = require('../models/itemSchema');
-const product = require('./productSchema');
+const { DataTypes } = require("sequelize");
+const sequelize = require("../conn");
+const customer = require("../models/customerSchema");
 
-const order = sequelize.define("orderTable",{
-    id : {
-        type : DataTypes.INTEGER,
-        allowNull : false,
-        primaryKey : true,
-        autoIncrement : true,
+const order = sequelize.define(
+  "orderTable",
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
     },
-    date : {
-        type : DataTypes.STRING,
-        defaultValue : new Date().getDate(),
-        allowNull : false
+    date: {
+      type: DataTypes.STRING,
+      defaultValue: new Date().getDate(),
+      allowNull: false,
     },
-    totalAmount : {
-        type : DataTypes.INTEGER,
-        allowNull : false, 
+    totalAmount: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
     },
-    customerId : {
-        type : DataTypes.INTEGER,
-        allowNull : false,
-        references : {
-            model : 'customer',
-            key : "id"
-        }
-    },
+  },
+  {
+    tableName: "orderTable",
+  }
+);
 
-},{
-    tableName : "orderTable"
+customer.hasOne(order, {
+  foreignKey: "customerId",
 });
+order.belongsTo(customer);
 
 module.exports = order;
-
