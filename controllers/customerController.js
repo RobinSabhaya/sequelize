@@ -12,17 +12,24 @@ const customerController = {
     });
   },
   async getOne(req, res) {
-    const { id } = req.params;
-    const customerData = await customer.findOne({
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json({
-      staus: 200,
-      message: "success",
-      customerData: customerData,
-    });
+    try {
+      const { id } = req.params;
+      const customerData = await customer.findOne({
+        where: {
+          id: id,
+        },
+      });
+      return res.status(200).json({
+        staus: 200,
+        message: "success",
+        customerData: customerData,
+      });
+    } catch (err) {
+      return res.json({
+        status: 400,
+        err: err.message,
+      });
+    }
   },
   async postCustomer(req, res) {
     try {
@@ -53,7 +60,7 @@ const customerController = {
       //    return res.status(301).redirect('/all')
       return res.status(200).json({
         status: 200,
-        message: "customer updated successful",
+        message: "customer updated successfully",
         customerData: customerData,
       });
     } catch (err) {
@@ -63,18 +70,13 @@ const customerController = {
       });
     }
   },
-  // async getEdit (req,res){
-  //     const {id} = req.params;
-  //     const updateCustomer = await customer.findOne({where : { id : id}})
-  //      return res.status(200).render('updateCustomer',{updateCustomer : updateCustomer});
-  // },
   async deleteCustomer(req, res) {
     try {
       const { id } = req.params;
       const customerData = await customer.destroy({ where: { id: id } });
       return res.status(200).json({
         status: 200,
-        message: "product deleted successful",
+        message: "customer deleted successfully",
         customerData: customerData,
       });
     } catch (err) {
@@ -84,9 +86,6 @@ const customerController = {
       });
     }
   },
-  // getDelete (req,res) {
-  //     return res.status(200).render('delete');
-  // }
 };
 
 module.exports = customerController;

@@ -81,6 +81,22 @@ const orderController = {
       });
     }
   },
+
+  async getOne(req, res) {
+    try {
+      const { id } = req.params;
+      const orderData = await order.findOne({ id: id });
+      return res.json({
+        status: 200,
+        orderData: orderData,
+      });
+    } catch (err) {
+      return res.json({
+        status: 400,
+        err: err.message,
+      });
+    }
+  },
 };
 
 module.exports = orderController;

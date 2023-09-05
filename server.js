@@ -1,13 +1,9 @@
 require("dotenv").config();
 const express = require("express");
 const PORT = process.env.PORT || 8000;
-const auth = require("./middlewares/auth");
 const cors = require("cors");
 const route = require("./router/index");
 const apiRoute = require("./router");
-const adminController = require("./controllers/adminController");
-const loginController = require("./controllers/loginController");
-// const error = require('./error/error');
 require("./db/conn");
 const app = express();
 

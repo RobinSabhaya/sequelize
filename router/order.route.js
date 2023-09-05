@@ -5,6 +5,7 @@ const {
   postOrder,
   deleteOrder,
   updateOrder,
+  getOne,
 } = require("../controllers/orderController");
 const route = express.Router();
 
@@ -13,5 +14,6 @@ route.get("/", getOrder);
 route.post("/", postOrder);
 route.put("/:id", updateOrder);
 route.delete("/:id", deleteOrder);
+route.get("/:id", getOne);
 
 module.exports = route;
