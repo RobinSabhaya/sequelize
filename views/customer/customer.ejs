@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>customer</title>
+</head>
+
+<body>
+    <h1>
+        customer
+    </h1>
+    <form action="/customer" method="post">
+        <input type="text" name="name" id="name" placeholder="name">
+        <input type="text" name="address" id="address" placeholder="address">
+        <input type="text" name="mobile" id="mobile" placeholder="mobile">
+        <input type="email" name="email" id="email" placeholder="email">
+        <button type="submit">submit</button>
+    </form>
+
+    <table border="2px" style="margin: 10px;">
+        <tr>
+            <th>id</th>
+            <th>name</th>
+            <th>email</th>
+            <th>address</th>
+            <th>mobile</th>
+            <th>Action</th>
+        </tr>
+
+        <% customerData?.forEach((customer)=>{%>
+            <tr>
+                <td>
+                    <%= customer?.id %>
+                </td>
+                <td>
+                    <%= customer?.name %>
+                </td>
+                <td>
+                    <%= customer?.email %>
+                </td>
+                <td>
+                    <%= customer?.address %>
+                </td>
+                <td>
+                    <%= customer?.mobile %>
+                </td>
+                <td>
+                    <button><a href="/customer/<%= customer?.id %>">Edit</a></button>
+                    <button><a href="/customer/deletecustomer/<%= customer?.id %>">Delete</a></button>
+                </td>
+            </tr>
+            <%})%>
+    </table>
+</body>
+
+</html>

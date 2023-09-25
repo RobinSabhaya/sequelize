@@ -8,9 +8,16 @@ const auth = (req, res, next) => {
     });
   }
   try {
-    const user = jwt.verify(authHeader.slice(7), process.env.JWT_SECRET);
-    req.user = user;
-    next();
+    if (authHeader.slice(0, 6) === "Bearer") {
+      const user = jwt.verify(authHeader.slice(7), process.env.JWT_SECRET);
+      req.user = user;
+      next();
+    } else {
+      return res.json({
+        status: 400,
+        message: "invalid token",
+      });
+    }
   } catch (err) {
     return res.json({
       status: 400,

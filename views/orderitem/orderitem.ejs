@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>orderitem & order</title>
+</head>
+
+<body>
+    <h1>orderitem & order</h1>
+    <!-- <form action="/order" method="post"> -->
+    <input type="number" name="totalAmount" id="totalAmount" placeholder="totalAmount">
+    <select name="customerId" id="customerId">
+        <% customerData?.forEach(customer=>{ %>
+            <option value="<%= customer?.id %>">
+                <%= customer?.name %>
+            </option>
+            <%})%>
+    </select>
+    <!-- <button type="submit">submit</button> -->
+    <!-- </form> -->
+
+
+    <!-- <form action="/orderitem" method="post"> -->
+    <input type="number" name="qty" id="qty" placeholder="qty">
+    <input type="number" name="price" id="price" placeholder="price">
+    <select name="productId" id="productId">
+        <% productData.forEach(product=>{%>
+            <option value=" <%= product?.id %>" data-productprice="<%= product?.price %>" id="product">
+                <%= product?.name %>
+            </option>
+            <%})%>
+    </select>
+    <button id="bttn">submit</button>
+    <button id="btn">+</button>
+    <!-- </form> -->
+    <table id="table">
+
+    </table>
+    <div id="container" style="display: flex;flex-direction: column-reverse; width: 30%; gap: 20px;"></div>
+    <table border="2px solid black" style="margin: 10px;">
+        <tr>
+            <th>id</th>
+            <th>order_date</th>
+            <th>totalAmount</th>
+            <th>customerName</th>
+            <th>Action</th>
+        </tr>
+        <% orderData?.forEach(order=>{%>
+            <tr>
+                <td>
+                    <%= order?.id %>
+                </td>
+                <td>
+                    <%= order?.order_date %>
+                </td>
+                <td>
+                    <%= order?.totalAmount %>
+                </td>
+                <td>
+                    <%= order?.customer?.name %>
+                </td>
+                <td>
+                    <button><a href="/order/<%= order?.id %>">edit</a></button>
+                    <button><a href="/order/deleteorder/<%= order?.id %>">delete</a></button>
+                </td>
+            </tr>
+            <%})%>
+    </table>
+    <table border="2px solid black" style="margin: 10px;">
+        <tr>
+            <th>id</th>
+            <th>qty</th>
+            <th>price</th>
+            <th>productName</th>
+            <th>productPrice</th>
+            <th>Amount</th>
+            <th>orderId</th>
+            <th>Action</th>
+        </tr>
+        <% itemData?.forEach(item=>{%>
+            <tr>
+                <td>
+                    <%= item?.id %>
+                </td>
+                <td>
+                    <%= item?.qty %>
+                </td>
+                <td>
+                    <%= item?.price %>
+                </td>
+                <td>
+                    <%= item?.product?.name %>
+                </td>
+                <td>
+                    <%= item?.product?.price %>
+                </td>
+                <td>
+                    <%= (item?.product?.price)*(item?.qty) %>
+                </td>
+                <td>
+                    <%= item?.orderId %>
+                </td>
+                <td>
+                    <button><a href="/item/<%= item?.id %>">edit</a></button>
+                    <button><a href="/item/deleteitem/<%= item?.id %>">delete</a></button>
+                </td>
+            </tr>
+            <%})%>
+
+    </table>
+
+
+    <script>
+        let arr = [];
+        const totalPrice = [];
+        let totalPriceDynamic = [];
+        const totalAmountArr = [];
+        const totalAmount = document.getElementById('totalAmount');
+        const customerId = document.getElementById('customerId')
+        const btn = document.getElementById("btn");
+        let productId = document.getElementById("productId");
+        let price = document.getElementById("price");
+        let qty = document.getElementById('qty');
+        const product = document.getElementById('product');
+        const table = document.getElementById('table');
+        let count = 0;
+
+        totalAmount.value = 0;
+        btn.addEventListener('click', () => {
+            const row = table.insertRow(count);
+            const cell1 = row.insertCell(0);
+            const cell2 = row.insertCell(1);
+            const cell3 = row.insertCell(2);
+            const cell4 = row.insertCell(3);
+            cell1.innerHTML = ` <input  id='qty_${count}' type="number" name="qty" id="qty" placeholder="qty">`
+            cell2.innerHTML = ` <input  id='price_${count}' type="number" name="price" id="price" placeholder="price">`
+            cell3.innerHTML = ` <select id='productId_${count}' name="productId" id="productId"> <% productData.forEach(product=>{%> <option value="<%= product?.id %>" data-productprice="<%= product?.price %>"><%= product?.name %></option><%})%></select>`;
+            cell4.innerHTML = `<button  id='btn_${count}' onclick="removeRow(this)">-</button>`
+            arr.push({ productId: productId.value, price: price.value, qty: qty.value })
+            addRow(count);
+            count++;
+        });
+
+        //Dynamically adding rows
+        function addRow(c) {
+            productId = document.getElementById(`productId_${c}`);
+            price = document.getElementById(`price_${c}`);
+            qty = document.getElementById(`qty_${c}`);
+            qty.addEventListener('change', (e) => {
+                qty.value = e.target.value;
+                totalPriceDynamic.push(qty.value)
+                console.log(totalPriceDynamic)
+            })
+
+            let priceChange;
+            let totalAmountData;
+            productId.addEventListener('change', (e) => {
+                productId.value = e.target.value;
+                totalPriceDynamic.push(e.target.options[e.target.selectedIndex].dataset.productprice)
+                totalPriceDynamic.reduce((acc, ele) => {
+                    return priceChange = (+acc) * (+ele);
+                });
+                price.value = priceChange;
+                totalAmount.value = priceChange
+                totalAmountArr.push(priceChange);
+                totalPriceDynamic = [];
+            });
+            totalAmountArr.reduce((acc, ele) => {
+                return totalAmountData = (+acc) + (+ele);
+            })
+            totalAmount.value = totalAmountData
+        }
+
+
+
+        // Static row
+        qty = document.getElementById("qty");
+        productId = document.getElementById("productId");
+        qty.addEventListener('change', (e) => {
+            qty.value = e.target.value;
+            totalPrice.push(qty.value)
+        })
+        let priceData;
+        let totalAmountData;
+        productId.addEventListener('change', (e) => {
+            productId.value = e.target.value;
+            totalPrice.push(e.target.options[e.target.selectedIndex].dataset.productprice)
+            const totalPriceData = totalPrice.reduce((acc, ele) => {
+                return priceData = (+acc) * (+ele);
+            });
+            price.value = priceData;
+            totalAmount.value = priceData;
+            totalAmountArr.push(priceData);
+        });
+
+        if (totalAmountArr.length > 0) {
+            totalAmountArr.reduce((acc, ele) => {
+                return totalAmountData = (+acc) + (+ele);
+            });
+            totalAmount.value = totalAmountData;
+        }
+
+        // Remove Row 
+        function removeRow(btn) {
+            let removeId = btn.parentNode.parentNode.rowIndex;
+            let index = btn.parentNode.removeChild(btn);
+            index = index.id
+            if (index.slice(4) == 0) {
+                delete arr[index.slice(4) + 1];
+            }
+            table.deleteRow(removeId);
+            if (index.slice(4) >= 1) {
+                delete arr[index.slice(4)]
+            }
+        }
+
+        const bttn = document.getElementById('bttn');
+        bttn.addEventListener('click', () => {
+            const orderObj = {
+                totalAmount: totalAmount.value,
+                customerId: customerId.value,
+                orderItems: arr
+            }
+            console.log(orderObj)
+            // fetch('http://localhost:8000/order', {
+            //     body: JSON.stringify(orderObj),
+            //     method: "POST",
+            //     headers: { "Content-type": "application/json; charset=UTF-8" }
+            // }).then((res) => {
+            //     return res.json()
+            // }).then(data => {
+            //     console.log(data)
+            // })
+        })
+    </script>
+</body>
+
+</html>

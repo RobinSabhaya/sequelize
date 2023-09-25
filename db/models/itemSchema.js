@@ -33,6 +33,8 @@ orderItem.belongsTo(product);
 order.hasMany(orderItem, {
   foreignKey: "orderId",
 });
-orderItem.belongsTo(order);
+orderItem.belongsTo(order, {
+  foreignKey: "orderId",
+});
 
 module.exports = orderItem;

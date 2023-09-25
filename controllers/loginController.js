@@ -22,7 +22,7 @@ const loginController = {
         password: password,
       });
       const accessToken = await jwt.sign(
-        { id: loginData.id, role: "customer" },
+        { id: loginData.id, role: "admin" },
         process.env.JWT_SECRET
       );
       return res.status(200).json({
@@ -32,7 +32,7 @@ const loginController = {
         accessToken: accessToken,
       });
     }
-    return res.status(200).json({
+    return res.json({
       status: 400,
       message: "user not found",
     });

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>order</title>
+</head>
+
+<body>
+    <h1>order</h1>
+    <form action="/order" method="post">
+        <input type="text" name="totalAmount" id="" placeholder="totalAmount">
+        <select name="customerId" id="">
+            <% customerData?.forEach(customer=>{ %>
+                <option value="<%= customer?.id %>">
+                    <%= customer?.name %>
+                </option>
+                <%})%>
+        </select>
+        <button type="submit">submit</button>
+    </form>
+
+    <table border="2px solid black" style="margin: 10px;">
+        <tr>
+            <th>id</th>
+            <th>order_date</th>
+            <th>totalAmount</th>
+            <th>customerName</th>
+            <th>Action</th>
+        </tr>
+        <% orderData?.forEach(order=>{%>
+            <tr>
+                <td>
+                    <%= order?.id %>
+                </td>
+                <td>
+                    <%= order?.order_date %>
+                </td>
+                <td>
+                    <%= order?.totalAmount %>
+                </td>
+                <td>
+                    <%= order?.customer?.name %>
+                </td>
+                <td>
+                    <button><a href="/order/<%= order?.id %>">edit</a></button>
+                    <button><a href="/order/deleteorder/<%= order?.id %>">delete</a></button>
+                </td>
+            </tr>
+            <%})%>
+    </table>
+</body>
+
+</html>

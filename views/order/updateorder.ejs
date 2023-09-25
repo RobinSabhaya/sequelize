@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit orderItem & order</title>
+</head>
+
+<body>
+    <h1>Edit orderItem & order</h1>
+    <!-- <form action="" method="post"> -->
+    <input type="text" name="totalAmount" id="" placeholder="totalAmount" value="<%= orderData?.totalAmount %>">
+    <select name="customerId" id="">
+        <% customerData?.forEach(customer=>{ %>
+            <option value="<%= customer?.id %>">
+                <%= customer?.name %>
+            </option>
+            <%})%>
+    </select>
+    <button id="addBtn">+</button>
+    <br>
+    <br>
+    <input type="hidden" name="hiddenInp" value="<%= JSON.stringify(orderItemData )%>" id="hiddenInp">
+    <% orderItemData.forEach(orderItem=>{%>
+        <div>
+            <input type="number" name="qty" id="qty" placeholder="Enter qty" value="<%= orderItem.qty %>">
+            <input type="number" name="price" id="price" placeholder="Enter price" value="<%= orderItem.price %>">
+            <select name="productId" class="productId" data-product="<%= orderItem.productId %>">
+                <% productData.forEach(product=>{%>
+                    <option value="<%= product.id %>" data-productprice="<%= product.price %>">
+                        <%= product?.name %>
+                    </option>
+                    <%})%>
+            </select>
+        </div>
+        <br>
+        <%}) %>
+            <table id="table"></table>
+            <button type="submit">submit</button>
+            <!-- </form> -->
+            <script>
+                let staticObj = {
+                    totalAmount: 0,
+                    customerId: 0,
+                    orderItems: []
+                };
+                const hiddenInp = document.getElementById('hiddenInp').value;
+                let priceArr = [];
+                let productId = document.querySelectorAll('.productId');
+                let qty = document.getElementById('qty');
+                let price = document.getElementById('price');
+                const table = document.getElementById('table')
+                qty.addEventListener('change', (e) => {
+                    qty.value = e.target.value;
+                    priceArr.push(qty.value);
+                })
+
+                productId.forEach(select => {
+                    select.value = select.dataset.product;
+                });
+                let priceData;
+                productId.forEach(select => {
+                    select.addEventListener('change', (e) => {
+                        select.value = e.target.value
+                        const priceChange = e.target.options[e.target.selectedIndex].dataset.productprice
+                        priceArr.push(priceChange)
+                        priceArr.reduce((acc, ele) => {
+                            return priceData = acc * ele;
+                        });
+                        price.value = priceData;
+                    })
+                });
+
+                // Fill the static object
+                JSON.parse(hiddenInp).forEach((ele) => {
+                    staticObj.orderItems.push(ele);
+                });
+
+                // Adding rows
+                const addBtn = document.getElementById('addBtn');
+                let count = 0;
+                addBtn.addEventListener('click', () => {
+                    const row = table.insertRow(count);
+                    const cell1 = row.insertCell(0)
+                    const cell2 = row.insertCell(1)
+                    const cell3 = row.insertCell(2)
+                    const cell4 = row.insertCell(3)
+                    cell1.innerHTML = ` <input  id='qty_${count}' type="text" name="qty" id="qty" placeholder="qty">`
+                    cell2.innerHTML = ` <input  id='price_${count}' type="number" name="price" id="price" placeholder="price">`
+                    cell3.innerHTML = ` <select id='productId_${count}' name="productId"> <% productData.forEach(product=>{%> <option value="<%= product?.id %>"><%= product?.name %></option><%})%></select>`;
+                    cell4.innerHTML = `<button  id='btn_${count}' onclick="removeRow(this)">-</button>`
+                    addRow(count);
+                    count++;
+                })
+
+                function addRow(count) {
+                    qty = document.getElementById(`qty_${count}`);
+                    price = document.getElementById(`price_${count}`);
+                    productId = document.getElementById(`productId_${count}`);
+                    qty.addEventListener('change', (e) => {
+                        qty.value = e.target.value;
+                        priceArr.push(qty.value);
+                    });
+
+                    let priceData;
+                    productId.addEventListener('change', (e) => {
+                        productId.value = e.target.value;
+                        priceArr.push(e.target.value);
+                        priceArr.reduce((acc, ele) => {
+                            return priceData = (+acc) * (+ele);
+                        })
+                        price.value = priceData;
+                        staticObj.orderItems.push({ productId: productId.value, price: price.value, qty: priceArr[0] })
+                        priceArr = [];
+                    })
+                    console.log(staticObj)
+                }
+            </script>
+</body>
+
+</html>
